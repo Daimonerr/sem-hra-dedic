@@ -2,7 +2,7 @@
 
 
 
-CShip::CShip (): cntBullets(0), shipLength(21)
+CShip::CShip ():CObject(21), cntBullets(0)
 {
 	buildPart(40,27,'|');
 	buildPart(40,29,'|');
@@ -30,29 +30,9 @@ CShip::CShip (): cntBullets(0), shipLength(21)
 	buildPart(43,31,'^');
 }
 
-void CShip::buildPart(const int & y,const int & x,const char & part)
-{
-	YXPART tmp(y,x,part);
-	ship.push_back(tmp);
-}
-
-void CShip::printShip()const
-{
-	for (int i = 0; i < shipLength; i++){
-		mvaddch(ship[i].posY, ship[i].posX,ship[i].partChar);
-	}
-}
-
-void CShip::clearShip()const
-{
-	for (int i = 0; i < shipLength; i++){
-		mvaddch(ship[i].posY, ship[i].posX,' ');
-	}
-}
-
 void CShip::newBullet()
 {
-	CBullet tmp(ship[4].posY -1, ship[4].posX);
+	CBullet tmp(parts[4].posY -1, parts[4].posX);
 
 	ammo.push_back(tmp);
 	cntBullets++;
@@ -80,34 +60,34 @@ void CShip::shipControll()
 	switch (direction)
 	{
 		case KEY_UP:
-			if (ship[0].posY == 1 )
+			if (parts[0].posY == 1 )
 				break;
 
-			for (int i = 0; i < 21; i++)
+			for (int i = 0; i < c_objLength; i++)
 			{
-				ship[i].posY -= 1;
+				parts[i].posY -= 1;
 			}
 			break;
 		case KEY_DOWN:
-			if (ship[14].posY == 44 ) break;
+			if (parts[14].posY == 44 ) break;
 			
-			for (int i = 0; i < 21; i++){
-				ship[i].posY += 1;
+			for (int i = 0; i < c_objLength; i++){
+				parts[i].posY += 1;
 			}
 			
 			break;
 		case KEY_LEFT:
-			if (ship[14].posX == 1 ) break;
-			for (int i = 0; i < 21; i++)
+			if (parts[14].posX == 1 ) break;
+			for (int i = 0; i < c_objLength; i++)
 			{
-				ship[i].posX -= 2;
+				parts[i].posX -= 2;
 			}
 			break;
 		case KEY_RIGHT:
-			if (ship[20].posX == 59 ) break;
-			for (int i = 0; i < 21; i++)
+			if (parts[20].posX == 59 ) break;
+			for (int i = 0; i < c_objLength; i++)
 			{
-				ship[i].posX += 2;
+				parts[i].posX += 2;
 			}
 			break;
 		case 'f':
@@ -140,11 +120,11 @@ void CShip::bulletHit(vector<CObstacle> & obstacles, int & c_cntObst, int & c_sc
 
 bool CShip::shipHit(vector<CObstacle> & obstacles, int & cntObst)
 {
-	for ( int i = 0; i < shipLength; i++)
+	for ( int i = 0; i < c_objLength; i++)
 	{
 		for( int j = 0; j < cntObst; j++)
 		{
-			if (obstacles[j].collide(ship[i].posY,ship[i].posX))
+			if (obstacles[j].collide(parts[i].posY,parts[i].posX))
 			{
 				obstacles[j].clearObst();
 				obstacles.erase(obstacles.begin()+j);           //111111111111111111111111111111

@@ -29,7 +29,7 @@ class CObject {
 	//	void moveBullets();
 	//	void bulletHit(vector<CObstacle> & obstacles, int & cntObst, int & c_score);
 	//	bool shipHit(vector<CObstacle> & obstacles, int & cntObst);
-	private:
+	protected:
 		vector<YXPART> parts;
 //		vector<CBullet> ammo;
 		

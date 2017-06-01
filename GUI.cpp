@@ -32,7 +32,7 @@ void CGame::runGame()
 	while( ! gameOver())
 	{
 
-		BattleShip.printShip();
+		BattleShip.printO();
 
 		spawnObstacles();
 		
@@ -45,7 +45,7 @@ void CGame::runGame()
 		usleep(10000);
 
 
-		BattleShip.clearShip();
+		BattleShip.clearO();
 		BattleShip.shipControll();
 		BattleShip.moveBullets();
 		BattleShip.bulletHit(obstacles, c_cntObst, c_score);
