@@ -1,18 +1,14 @@
 #include "object.h"
 
 
-CObject::CObject(): c_objLength(1)
+CObject::CObject(): c_objLength(0)
 {}
-
-CObject::CObject(const int & oLength )
-{
-	c_objLength = oLength;
-}
 
 void CObject::buildPart(const int & y,const int & x,const char & part)
 {
 	YXPART tmp(y,x,part);
 	parts.push_back(tmp);
+	c_objLength++;
 }
 
 void CObject::printO()const

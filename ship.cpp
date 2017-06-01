@@ -2,7 +2,7 @@
 
 
 
-CShip::CShip ():CObject(21), cntBullets(0)
+CShip::CShip ():CObject(), cntBullets(0)
 {
 	buildPart(40,27,'|');
 	buildPart(40,29,'|');

@@ -9,6 +9,7 @@
 class CObstacle {
 	public:
 		CObstacle(const int & y, const int & x, const int & sp);
+//		~CObstacle();
 		void printObst()const;
 		void clearObst()const;
 		bool moveObst(CTimer & cntTime);

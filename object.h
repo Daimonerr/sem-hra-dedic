@@ -18,7 +18,6 @@ struct YXPART{
 class CObject {
 	public:
 		CObject();
-		CObject(const int & oLength);
 		void printO()const;
 		void clearO()const;
 		virtual void moveO();
