@@ -17,14 +17,16 @@ bool CBullet::moveBullet()
 	return true;
 }
 
-bool CBullet::collision(vector<CObstacle> & obstacles, int & cntObst)
+bool CBullet::collision(vector<CObstacle*> & obstacles, int & cntObst)
 {
 	for ( int i = 0; i < cntObst; i++)
 	{
-		if ( obstacles[i].collide(c_posY, c_posX))
+		if ( (*obstacles[i]).collide(c_posY, c_posX))
 		{
-			obstacles[i].clearObst();
-			obstacles.erase(obstacles.begin()+i);           //111111111111111111111111111111
+			obstacles[i]->clearO();	
+			auto it = (obstacles.begin()+i);
+			delete (*it);
+			obstacles.erase(obstacles.begin()+i);
 			cntObst--;
 
 

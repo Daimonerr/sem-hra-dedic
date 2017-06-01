@@ -13,6 +13,9 @@ CGame::CGame(): c_score(0), c_cntObst(0), c_health(3), c_remainObst(0), c_cntFil
 CGame::~CGame()
 {
 	nodelay(stdscr, false);
+	for (auto it = 	obstacles.begin() ; it != obstacles.end(); ++it)
+		{ delete (*it);}
+    obstacles.clear();
 	endwin();
 }
 
@@ -33,9 +36,7 @@ void CGame::runGame()
 	{
 
 		BattleShip.printO();
-
 		spawnObstacles();
-		
 
 		printUtilities();
 
@@ -47,6 +48,8 @@ void CGame::runGame()
 
 		BattleShip.clearO();
 		BattleShip.shipControll();
+		if ( cntTime.getPlaytime() == 10)
+			break;
 		BattleShip.moveBullets();
 		BattleShip.bulletHit(obstacles, c_cntObst, c_score);
 		////////////////////////////////////////////////////////////
@@ -156,7 +159,7 @@ void CGame::moveObstacles()
 
 	for (int i = 0; i < c_cntObst; i++)
 	{
-		if( ! obstacles[i].moveObst(cntTime))
+		if( ! obstacles[i]->moveO(cntTime))
 		{
 			deleteObst(i);
 			i--;
@@ -167,7 +170,10 @@ void CGame::moveObstacles()
 
 void CGame::deleteObst(const int & i)
 {
+	auto it = (obstacles.begin()+i);
+	delete (*it);
 	obstacles.erase(obstacles.begin()+i);
+
 	c_cntObst--;
 }
 
@@ -178,10 +184,27 @@ void CGame::spawnObstacles()
 	{
 		if ( file[i].time == cntTime.getPlaytime() && cntTime.getMsec() == 0 )
 		{
-			CObstacle tmp5(file[i].y,file[i].x, file[i].sp);
-			obstacles.push_back(tmp5);
+	
+			switch (file[i].type)
+			{
+				case 'A':
+					obstacles.push_back(new CObstacleA(file[i].y,file[i].x, file[i].sp));
+					break; 
+				case 'B':
+					obstacles.push_back(new CObstacleB(file[i].y,file[i].x, file[i].sp));			
+					break;
+				case 'C':
+					break;
+			}
+//			CObstacle tmp5(file[i].y,file[i].x, file[i].sp);
+//			obstacles.push_back(tmp5);
 			c_cntObst++;
 			c_remainObst--;
+
+
+	//		CKnife b(;
+    //		things.push_back(new CKnife(b.vypisBlade()));
+	//	    c_pocetVeci++;
 		}
 	}
 
@@ -191,6 +214,7 @@ bool CGame::getFile()
 {
 	int controll;
 	int a,b,c;
+	char d;
 	FILE *mapFile;
 	getnstr(c_mapName,19);
 
@@ -200,16 +224,17 @@ bool CGame::getFile()
 
 	c_cntFileObjs = 0;
 
-	while ( (controll = fscanf(mapFile, "%d %d %d ", &a, &b, &c)) != EOF )
+	while ( (controll = fscanf(mapFile, "%d %d %d %c", &a, &b, &c, &d)) != EOF && ( d == 'A' || d == 'B' || d == 'C'))
 	{
 		if (controll < 3)
 		{
 			fclose(mapFile);
 			return false;
 		}
-		LOADLEVEL tmp(a,b,c);
+		LOADLEVEL tmp(a,b,c,d);
 		file.push_back(tmp);
 		c_cntFileObjs++;
+
 	}
 
 
@@ -227,8 +252,6 @@ void CGame::printUtilities ()
 {
 	mvprintw(8,67,"   ");
 	mvprintw(8,67,"%d", c_remainObst);
-	
-	
 	mvprintw(12,67,"%d", c_score);
 	mvprintw(40,67,"%d", c_health);
 	mvprintw(4,66,"%s", cntTime.printTime().c_str());	

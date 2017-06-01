@@ -16,17 +16,19 @@ using namespace std;
 struct LOADLEVEL{
 	LOADLEVEL(): y(0), x(0), time(0), sp(0)
 	{}
-	LOADLEVEL(const int & a, const int & tik, const int & speedo)
+	LOADLEVEL(const int & a, const int & tik, const int & speedo, const char & typeO)
 	{
 		y=2;
 		x=a;
 		time=tik;
 		sp = speedo;
+		type=typeO;
 	}
 	int y;
 	int x;
 	int time;
 	int sp;
+	char type;
 };
 
 class CGame {
@@ -51,7 +53,7 @@ class CGame {
 		bool gameOver();
 		void gameEnding();
 //		int mapX,mapY;
-		vector<CObstacle> obstacles;
+		vector<CObstacle*> obstacles;
 		int c_score, c_cntObst, c_health, c_remainObst;
 		char c_nickname[20],c_mapName[20];
 		CTimer cntTime;

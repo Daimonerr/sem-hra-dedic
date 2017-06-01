@@ -1,2 +1,11 @@
 Nickname: Bur   Map: level1.txt   Score: 100
 Nickname: Tomasek   Map: level1.txt   Score: 120
+Nickname: Buryseklol   Map: level1.txt   Score: 160
+Nickname: Lol   Map: level1.txt   Score: 0
+Nickname: level   Map:    Score: 0
+Nickname: levell   Map:    Score: 0
+Nickname: level   Map: level1.txt   Score: 0
+Nickname: lol   Map: level1.txt   Score: 0
+Nickname: lOL   Map: level1.txt   Score: 80
+Nickname: ldl   Map: level1.txt   Score: 120
+Nickname: lol   Map: level1.txt   Score: 120

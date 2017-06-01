@@ -1,14 +1,14 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "obstacle.h"
+#include "obstacleB.h"
 
 
 class CBullet {
 	public:
 		CBullet(const int & y, const int & x);
 		bool moveBullet();
-		bool collision(vector<CObstacle> & obstacles, int & cntObst);
+		bool collision(vector<CObstacle*> & obstacles, int & cntObst);
 		void clearBullet();
 	private:	
 		int c_posY;

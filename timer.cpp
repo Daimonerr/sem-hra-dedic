@@ -1,5 +1,7 @@
 #include "timer.h"
 
+CTimer::CTimer():c_min(0), c_sec(0), c_msec(0), c_playtime(0)
+{}
 
 void CTimer::addTime()
 {

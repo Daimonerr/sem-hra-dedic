@@ -55,9 +55,9 @@ void CShip::moveBullets()
 
 void CShip::shipControll()
 {
-	int direction = getch();
+//	int direction = getch();
 
-	switch (direction)
+	switch (getch())//direction)
 	{
 		case KEY_UP:
 			if (parts[0].posY == 1 )
@@ -101,7 +101,7 @@ void CShip::shipControll()
 }
 
 
-void CShip::bulletHit(vector<CObstacle> & obstacles, int & c_cntObst, int & c_score)
+void CShip::bulletHit(vector<CObstacle*> & obstacles, int & c_cntObst, int & c_score)
 {
 	for (int i = 0; i < cntBullets; i++)
 	{
@@ -118,17 +118,20 @@ void CShip::bulletHit(vector<CObstacle> & obstacles, int & c_cntObst, int & c_sc
 	}
 }
 
-bool CShip::shipHit(vector<CObstacle> & obstacles, int & cntObst)
+bool CShip::shipHit(vector<CObstacle*> & obstacles, int & cntObst)
 {
 	for ( int i = 0; i < c_objLength; i++)
 	{
 		for( int j = 0; j < cntObst; j++)
 		{
-			if (obstacles[j].collide(parts[i].posY,parts[i].posX))
+			if (obstacles[j]->collide(parts[i].posY,parts[i].posX))
 			{
-				obstacles[j].clearObst();
-				obstacles.erase(obstacles.begin()+j);           //111111111111111111111111111111
+				obstacles[j]->clearO();					
+				auto it = (obstacles.begin()+j);
+				delete (*it);
+				obstacles.erase(obstacles.begin()+j);
 				cntObst--;
+
 				return true;
 				
 

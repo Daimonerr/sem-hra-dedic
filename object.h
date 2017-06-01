@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <ncurses.h>
+#include "timer.h"
 
 using namespace std;
 
@@ -18,9 +19,10 @@ struct YXPART{
 class CObject {
 	public:
 		CObject();
+		virtual ~CObject(){};
 		void printO()const;
 		void clearO()const;
-		virtual void moveO();
+//		virtual bool moveO(CTimer & cntTime);
 		
 		void buildPart(const int & y,const int & x,const char & part);
 	

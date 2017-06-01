@@ -2,15 +2,13 @@
 #define TIMER_H
 
 #include <string>
-#include "object.h"
 using namespace std;
 
 
 
 class CTimer {
 	public:
-		CTimer():c_min(0), c_sec(0), c_msec(0)
-		{}
+		CTimer();
 		void addTime();
 		void resetTime();
 		string printTime();

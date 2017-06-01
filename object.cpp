@@ -1,5 +1,11 @@
 #include "object.h"
 
+YXPART::YXPART(const int & y, const int & x, const char & c)
+{
+	posY = y;
+	posX = x;
+	partChar = c;
+}
 
 CObject::CObject(): c_objLength(0)
 {}
@@ -24,6 +30,8 @@ void CObject::clearO()const
 		mvaddch(parts[i].posY, parts[i].posX,' ');
 	}
 }
-
-void CObject::moveO()
-{}
+/*
+bool CObject::moveO(CTimer & cntTime)
+{
+	return true;
+}*/
