@@ -33,3 +33,4 @@ Nickname: asd   Map: level1.txt   Score: 240
 Nickname: le   Map: level1.txt   Score: 120
 Nickname: lel   Map: level1.txt   Score: 120
 Nickname: lel   Map: level1.txt   Score: 0
+Nickname: lev   Map: level1.txt   Score: 360

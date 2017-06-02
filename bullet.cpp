@@ -3,7 +3,7 @@
 CBullet::CBullet(const int & y, const int & x, const char & bChar): CObject(y,x,bChar) 
 {} 
 
-bool CBullet::moveBullet()
+bool CBullet::moveO()
 {
 	clearO();
 	if ( ! isCollision())
@@ -21,6 +21,6 @@ bool CBullet::isCollision()
 	{
 		return true;
 	}
-	
+
 	return false;	
 }

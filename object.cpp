@@ -60,8 +60,13 @@ void CObject::clearO()const
 	}
 }
 
-/*
+
 bool CObject::moveO()
 {
 	return true;
-}*/
+}
+
+bool CObject::moveO(CTimer & cntTime)
+{
+	return true;
+}

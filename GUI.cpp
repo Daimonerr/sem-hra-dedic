@@ -24,7 +24,7 @@ void CGame::moveBullets()
 {
 	for (int i = 0; i < c_cntBullets; i++)
 	{
-		if ( ! ammo[i].moveBullet())
+		if ( ! ammo[i].moveO())
 		{
 			deleteBullet(i);
 			i--;
@@ -61,20 +61,13 @@ void CGame::runGame()
 		moveObstacles();
 
 		refresh();
+//////////////////////////////////////////////
 		usleep(20000);
+//////////////////////////////////////////////
 
-//		checkDestroyed();
 		BattleShip.clearO();
 		gameControll();
 
-	//	if ( cntTime.getPlaytime() == 10)
-	//		break;
-	//	BattleShip.moveBullets();
-	//	BattleShip.bulletHit(obstacles, c_cntObst, c_score);
-		////////////////////////////////////////////////////////////
-	//	if (BattleShip.shipHit(obstacles, c_cntObst))
-	//		c_health--;
-		////////////////////////////////////////////////////////////
 
 		cntTime.addTime();
 	}

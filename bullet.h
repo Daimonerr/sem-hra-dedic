@@ -7,7 +7,7 @@
 class CBullet : public CObject {
 	public:
 		CBullet(const int & y, const int & x, const char & bChar);
-		bool moveBullet();
+		virtual bool moveO();
 		virtual bool isCollision();
 //		void clearBullet();
 //	private:	
