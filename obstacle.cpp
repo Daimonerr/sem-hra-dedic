@@ -1,7 +1,7 @@
 #include "obstacle.h"
 
 
-CObstacle::CObstacle():CObject()
+CObstacle::CObstacle(const int & y, const int & x, const char & cChar):CObject(y,x,cChar)
 {}
 
 bool CObstacle::moveO(CTimer & cntTime)
@@ -10,9 +10,9 @@ bool CObstacle::moveO(CTimer & cntTime)
 }
 
 
-bool CObstacle::isOnEdge()const
+bool CObstacle::isCollision()
 {
-	if(parts[2].posY == 44)
+	if(c_posY == 44)
 	{
 		clearO();
 		return true;	
@@ -20,12 +20,22 @@ bool CObstacle::isOnEdge()const
 	return false;
 }
 
-bool CObstacle::collide(const int & y, const int & x)const
+
+bool CObstacle::collide(const int & y, const int & x)
 {
-	for (int i = 0; i < c_objLength; i++)
+	if (c_posY == y && c_posX == x)
 	{
-		if ( parts[i].posY == y && parts[i].posX == x)
-			return true;
+		clearO();
+		return true;
+	}
+
+	for (int i = 0; i < c_offsLen; i++)
+	{
+		if ( (c_posY + offset[i].offsY) == y && (c_posX + offset[i].offsX ) == x)
+			{
+				clearO();
+				return true;
+			}
 	}
 
 	return false;

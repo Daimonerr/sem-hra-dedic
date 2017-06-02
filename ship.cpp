@@ -2,105 +2,77 @@
 
 
 
-CShip::CShip ():CObject(), cntBullets(0)
+CShip::CShip ():CObject(41,28,'A')
 {
-	buildPart(40,27,'|');
-	buildPart(40,29,'|');
+	buildOffset(-1,-1,'/');
+	buildOffset(-1,1,'\\');
+	buildOffset(-1,0,'|');
 
-	buildPart(41,26,'/');
-	buildPart(41,27,'#');
-	buildPart(41,28,'A');
-	buildPart(41,29,'#');
-	buildPart(41,30,'\\');
+	buildOffset(0,-2,'/');
+	buildOffset(0,-1,'#');
+	buildOffset(0,1,'#');
+	buildOffset(0,2,'\\');
 
-	buildPart(42,25,'/');
-	buildPart(42,26,'/');
-	buildPart(42,27,'O');
-	buildPart(42,28,'|');
-	buildPart(42,29,'O');
-	buildPart(42,30,'\\');
-	buildPart(42,31,'\\');
+	buildOffset(1,3,'/');
+	buildOffset(1,2,'/');
+	buildOffset(1,1,'O');
+	buildOffset(1,0,'|');
+	buildOffset(1,-1,'O');
+	buildOffset(1,-2,'\\');
+	buildOffset(1,-3,'\\');
 
-	buildPart(43,25,'^');
-	buildPart(43,26,'^');
-	buildPart(43,27,'^');
-	buildPart(43,28,'^');
-	buildPart(43,29,'^');
-	buildPart(43,30,'^');
-	buildPart(43,31,'^');
+	buildOffset(2,3,'^');
+	buildOffset(2,2,'^');
+	buildOffset(2,1,'^');
+	buildOffset(2,0,'^');
+	buildOffset(2,-1,'^');
+	buildOffset(2,-2,'^');
+	buildOffset(2,-3,'^');
 }
 
-void CShip::newBullet()
+CBullet CShip::newBullet()
 {
-	CBullet tmp(parts[4].posY -1, parts[4].posX);
+	CBullet newB(c_posY-1, c_posX, '*');
 
-	ammo.push_back(tmp);
-	cntBullets++;
-}
-
-void CShip::moveBullets()
-{
-	for (int i = 0; i < cntBullets; i++)
-	{
-		if ( ! ammo[i].moveBullet())
-		{
-			cntBullets--;
-			ammo.erase(ammo.begin()+i);
-			i--;
-		}
-	}	
-
-
-}
-
-void CShip::shipControll()
-{
-//	int direction = getch();
-
-	switch (getch())//direction)
-	{
-		case KEY_UP:
-			if (parts[0].posY == 1 )
-				break;
-
-			for (int i = 0; i < c_objLength; i++)
-			{
-				parts[i].posY -= 1;
-			}
-			break;
-		case KEY_DOWN:
-			if (parts[14].posY == 44 ) break;
-			
-			for (int i = 0; i < c_objLength; i++){
-				parts[i].posY += 1;
-			}
-			
-			break;
-		case KEY_LEFT:
-			if (parts[14].posX == 1 ) break;
-			for (int i = 0; i < c_objLength; i++)
-			{
-				parts[i].posX -= 2;
-			}
-			break;
-		case KEY_RIGHT:
-			if (parts[20].posX == 59 ) break;
-			for (int i = 0; i < c_objLength; i++)
-			{
-				parts[i].posX += 2;
-			}
-			break;
-		case 'f':
-			newBullet();
-		case 'l':
-			return;
-	}
-
-
-
+	return newB;
 }
 
 
+
+void CShip::moveLeft()
+{
+	if (c_posX - 3 == 1 )
+		return;
+	c_posX -= 2;
+}
+
+void CShip::moveRight()
+{
+	if (c_posX + 3 == 59 )
+		return;
+	c_posX += 2;
+}
+
+void CShip::moveUp()
+{
+	if (c_posY - 1 == 1 )
+		return;
+	c_posY--;
+}
+
+void CShip::moveDown()
+{
+	if (c_posY + 2 == 44 )
+		return;
+	c_posY ++;
+}
+
+bool CShip::isCollision()
+{
+	return false;
+}
+
+/*
 void CShip::bulletHit(vector<CObstacle*> & obstacles, int & c_cntObst, int & c_score)
 {
 	for (int i = 0; i < cntBullets; i++)
@@ -117,7 +89,9 @@ void CShip::bulletHit(vector<CObstacle*> & obstacles, int & c_cntObst, int & c_s
 		}
 	}
 }
+*/
 
+/*
 bool CShip::shipHit(vector<CObstacle*> & obstacles, int & cntObst)
 {
 	for ( int i = 0; i < c_objLength; i++)
@@ -140,3 +114,4 @@ bool CShip::shipHit(vector<CObstacle*> & obstacles, int & cntObst)
 	}
 	return false;
 }
+*/

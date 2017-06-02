@@ -8,13 +8,11 @@
 
 class CObstacle : public CObject {
 	public:
-		CObstacle();
+		CObstacle(const int & y, const int & x, const char & cChar);
 		virtual ~CObstacle(){};
-//		void printObst()const;
-//		void clearObst()const;
 		virtual bool moveO(CTimer & cntTime);
-		bool isOnEdge()const;
-		bool collide(const int & y, const int & x)const;
+		virtual bool isCollision();
+		bool collide(const int & y, const int & x);
 //	protected:
 //		void buildPart(const int & y,const int & x,const char & part);
 		

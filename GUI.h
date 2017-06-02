@@ -37,10 +37,15 @@ class CGame {
 		~CGame();
 		void runGame();
 		void drawMap();
+		void moveBullets();
+		void gameControll();
+		void shipXobstacles();
+		void bulletXobstacles();
 
 	private:
 		void moveObstacles();
 		void deleteObst(const int & i);
+		void deleteBullet(const int & i);
 		void spawnObstacles();
 		void drawSquare(const int & height, 
 						const int & width, 
@@ -52,9 +57,12 @@ class CGame {
 		void printUtilities();
 		bool gameOver();
 		void gameEnding();
-//		int mapX,mapY;
+
 		vector<CObstacle*> obstacles;
-		int c_score, c_cntObst, c_health, c_remainObst;
+		vector<CBullet> ammo;
+
+		int c_cntBullets;
+		int c_score, c_crntObst, c_health, c_remainObst;
 		char c_nickname[20],c_mapName[20];
 		CTimer cntTime;
 		CShip BattleShip;	

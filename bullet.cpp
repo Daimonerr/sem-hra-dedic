@@ -1,43 +1,26 @@
 #include "bullet.h"
 
-CBullet::CBullet(const int & y, const int & x): c_posY(y), c_posX(x), c_bulletChar('*')
+CBullet::CBullet(const int & y, const int & x, const char & bChar): CObject(y,x,bChar) 
 {} 
 
 bool CBullet::moveBullet()
 {
-	mvaddch(c_posY,c_posX, ' ');
-	c_posY -= 1;
-	
-	if (c_posY == 1)
+	clearO();
+	if ( ! isCollision())
 	{
-		mvaddch(c_posY, c_posX, ' ');
-		return false;
-	}else
-		mvaddch(c_posY,c_posX, c_bulletChar);
-	return true;
-}
-
-bool CBullet::collision(vector<CObstacle*> & obstacles, int & cntObst)
-{
-	for ( int i = 0; i < cntObst; i++)
-	{
-		if ( (*obstacles[i]).collide(c_posY, c_posX))
-		{
-			obstacles[i]->clearO();	
-			auto it = (obstacles.begin()+i);
-			delete (*it);
-			obstacles.erase(obstacles.begin()+i);
-			cntObst--;
-
-
-			return true;
-		}
+		c_posY -= 1;	
+		printO();
+		return true;
 	}
-
 	return false;
 }
 
-void CBullet::clearBullet()
+bool CBullet::isCollision()
 {
-	mvaddch(c_posY, c_posX, ' ');
+	if (c_posY == 2)
+	{
+		return true;
+	}
+	
+	return false;	
 }

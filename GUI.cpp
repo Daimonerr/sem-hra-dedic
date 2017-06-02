@@ -1,6 +1,6 @@
 #include "GUI.h"
 
-CGame::CGame(): c_score(0), c_cntObst(0), c_health(3), c_remainObst(0), c_cntFileObjs(0)
+CGame::CGame(): c_cntBullets(0), c_score(0), c_crntObst(0), c_health(3), c_remainObst(0), c_cntFileObjs(0)
 {
 	initscr();
 	c_nickname[0]='\0';
@@ -16,7 +16,21 @@ CGame::~CGame()
 	for (auto it = 	obstacles.begin() ; it != obstacles.end(); ++it)
 		{ delete (*it);}
     obstacles.clear();
+    ammo.clear();
 	endwin();
+}
+
+void CGame::moveBullets()
+{
+	for (int i = 0; i < c_cntBullets; i++)
+	{
+		if ( ! ammo[i].moveBullet())
+		{
+			deleteBullet(i);
+			i--;
+		}
+		
+	}	
 }
 
 void CGame::runGame()
@@ -39,29 +53,108 @@ void CGame::runGame()
 		spawnObstacles();
 
 		printUtilities();
+		moveBullets();
+		
+		shipXobstacles();
+		bulletXobstacles();
 
 		moveObstacles();
 
 		refresh();
-		usleep(10000);
+		usleep(20000);
 
-
+//		checkDestroyed();
 		BattleShip.clearO();
-		BattleShip.shipControll();
-		if ( cntTime.getPlaytime() == 10)
-			break;
-		BattleShip.moveBullets();
-		BattleShip.bulletHit(obstacles, c_cntObst, c_score);
+		gameControll();
+
+	//	if ( cntTime.getPlaytime() == 10)
+	//		break;
+	//	BattleShip.moveBullets();
+	//	BattleShip.bulletHit(obstacles, c_cntObst, c_score);
 		////////////////////////////////////////////////////////////
-		if (BattleShip.shipHit(obstacles, c_cntObst))
-			c_health--;
+	//	if (BattleShip.shipHit(obstacles, c_cntObst))
+	//		c_health--;
 		////////////////////////////////////////////////////////////
 
 		cntTime.addTime();
 	}
 
 	gameEnding();
+}
 
+void CGame::shipXobstacles()
+{
+
+	vector<YXPART> shipCPoints(BattleShip.giveCollisionPoints());
+
+	for ( int i = 0; i < 21; i++)
+	{
+		for( int j = 0; j < c_crntObst; j++)
+		{
+			if (obstacles[j]->collide(shipCPoints[i].offsY,shipCPoints[i].offsX))
+			{
+				deleteObst(j);
+				c_health--;	
+				return;
+			}
+		}
+	}
+
+//	mvprintw(1,1,shipCPoints[i].offsY);
+}
+
+void CGame::bulletXobstacles()
+{
+	for ( int i = 0; i < c_cntBullets; i++)
+	{
+		YXPART bullet(ammo[i].giveCorePoint());
+
+		for( int j = 0; j < c_crntObst; j++)
+		{
+			if (obstacles[j]->collide(bullet.offsY,bullet.offsX))
+			{	
+				c_cntBullets--;
+				ammo.erase(ammo.begin()+i);
+				deleteObst(j);
+
+
+				c_score += 20;
+				return;
+			}
+		}
+	}	
+}
+
+
+
+void CGame::gameControll()
+{
+	switch (getch())
+	{
+		case KEY_UP:
+			BattleShip.moveUp();
+			break;
+
+		case KEY_DOWN:
+			BattleShip.moveDown();
+			break;
+
+		case KEY_LEFT:
+			BattleShip.moveLeft();
+			break;
+
+		case KEY_RIGHT:
+			BattleShip.moveRight();
+			break;
+		
+		case 'f':
+			ammo.push_back(BattleShip.newBullet());
+			c_cntBullets++;
+			break;
+		case 'l':
+		//PAUSE
+			break;
+	}
 
 }
 
@@ -157,7 +250,7 @@ void CGame::drawMap()
 void CGame::moveObstacles()
 {
 
-	for (int i = 0; i < c_cntObst; i++)
+	for (int i = 0; i < c_crntObst; i++)
 	{
 		if( ! obstacles[i]->moveO(cntTime))
 		{
@@ -174,9 +267,16 @@ void CGame::deleteObst(const int & i)
 	delete (*it);
 	obstacles.erase(obstacles.begin()+i);
 
-	c_cntObst--;
+	c_crntObst--;
 }
 
+
+
+void CGame::deleteBullet(const int & i)
+{
+	ammo.erase(ammo.begin()+i);
+	c_cntBullets--;
+}
 
 void CGame::spawnObstacles()
 {
@@ -188,17 +288,17 @@ void CGame::spawnObstacles()
 			switch (file[i].type)
 			{
 				case 'A':
-					obstacles.push_back(new CObstacleA(file[i].y,file[i].x, file[i].sp));
+					obstacles.push_back(new CObstacleA(file[i].y,file[i].x, '#',file[i].sp));
 					break; 
 				case 'B':
-					obstacles.push_back(new CObstacleB(file[i].y,file[i].x, file[i].sp));			
+					obstacles.push_back(new CObstacleB(file[i].y,file[i].x, '#',file[i].sp));			
 					break;
 				case 'C':
 					break;
 			}
 //			CObstacle tmp5(file[i].y,file[i].x, file[i].sp);
 //			obstacles.push_back(tmp5);
-			c_cntObst++;
+			c_crntObst++;
 			c_remainObst--;
 
 

@@ -5,7 +5,7 @@ CTimer::CTimer():c_min(0), c_sec(0), c_msec(0), c_playtime(0)
 
 void CTimer::addTime()
 {
-	c_msec += 1;
+	c_msec += 2;
 
 	if (c_msec == 100)
 	{

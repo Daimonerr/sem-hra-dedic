@@ -4,16 +4,16 @@
 #include "obstacleB.h"
 
 
-class CBullet {
+class CBullet : public CObject {
 	public:
-		CBullet(const int & y, const int & x);
+		CBullet(const int & y, const int & x, const char & bChar);
 		bool moveBullet();
-		bool collision(vector<CObstacle*> & obstacles, int & cntObst);
-		void clearBullet();
-	private:	
-		int c_posY;
-		int c_posX;
-		int c_bulletChar;
+		virtual bool isCollision();
+//		void clearBullet();
+//	private:	
+//		int c_posY;
+//		int c_posX;
+//		int c_bulletChar;
 };
 
 
