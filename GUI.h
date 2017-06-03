@@ -18,7 +18,7 @@ struct LOADLEVEL{
 	{}
 	LOADLEVEL(const int & a, const int & tik, const int & speedo, const char & typeO)
 	{
-		y=2;
+		y=3;
 		x=a;
 		time=tik;
 		sp = speedo;
@@ -36,11 +36,11 @@ class CGame {
 		CGame();
 		~CGame();
 		void runGame();
-		void drawMap();
+		void drawMap()const;
 		void moveBullets();
 		void gameControll();
-		void shipXobstacles();
-		void bulletXobstacles();
+		void checkShip();
+		void checkBullets();
 
 	private:
 		void moveObstacles();
@@ -51,12 +51,14 @@ class CGame {
 						const int & width, 
 						const int & startY, 
 						const int & startX, 
-						const char & printChar);
+						const char & printChar)const;
 		void startMenu();
 		bool getFile();
 		void printUtilities();
 		bool gameOver();
 		void gameEnding();
+		bool hitBullet(YXPART & bullet, const int & cnt);
+		bool hitShip(YXPART & shipCPoint);
 
 		vector<CObstacle*> obstacles;
 		vector<CBullet> ammo;

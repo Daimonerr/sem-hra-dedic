@@ -46,7 +46,6 @@ void CObject::buildOffset(const int & y,const int & x,const char & oChar)
 void CObject::printO()const
 {
 	mvaddch(c_posY, c_posX, c_coreChar);
-
 	for (int i = 0; i < c_offsLen; i++){
 		mvaddch(c_posY + offset[i].offsY, c_posX + offset[i].offsX, offset[i].offsChar);
 	}

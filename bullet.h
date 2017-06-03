@@ -1,7 +1,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "obstacleB.h"
+#include "obstacleC.h"
 
 
 class CBullet : public CObject {

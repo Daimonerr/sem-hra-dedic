@@ -7,6 +7,7 @@ CGame::CGame(): c_cntBullets(0), c_score(0), c_crntObst(0), c_health(3), c_remai
 	c_mapName[0]='\0';
 	printw("Enter your nickname: ");
 	getnstr(c_nickname, 19);
+	
 }
 
 
@@ -14,7 +15,7 @@ CGame::~CGame()
 {
 	nodelay(stdscr, false);
 	for (auto it = 	obstacles.begin() ; it != obstacles.end(); ++it)
-		{ delete (*it);}
+		{ delete (*it); }
     obstacles.clear();
     ammo.clear();
 	endwin();
@@ -52,72 +53,80 @@ void CGame::runGame()
 		BattleShip.printO();
 		spawnObstacles();
 
-		printUtilities();
 		moveBullets();
-		
-		shipXobstacles();
-		bulletXobstacles();
-
 		moveObstacles();
-
+		
 		refresh();
+		checkShip();
+		checkBullets();
+		if (cntTime.getPlaytime() == 200 )
+			break;
+
+
 //////////////////////////////////////////////
 		usleep(20000);
 //////////////////////////////////////////////
 
 		BattleShip.clearO();
+		printUtilities();
 		gameControll();
-
-
 		cntTime.addTime();
 	}
 
 	gameEnding();
 }
 
-void CGame::shipXobstacles()
+void CGame::checkShip()
 {
 
 	vector<YXPART> shipCPoints(BattleShip.giveCollisionPoints());
 
 	for ( int i = 0; i < 21; i++)
 	{
-		for( int j = 0; j < c_crntObst; j++)
+		if (hitShip(shipCPoints[i]))
+			return;
+	}
+}
+bool CGame::hitShip(YXPART & shipCPoint)
+{
+	for( int j = 0; j < c_crntObst; j++)
+	{
+		if (obstacles[j]->collide(shipCPoint.offsY,shipCPoint.offsX))
 		{
-			if (obstacles[j]->collide(shipCPoints[i].offsY,shipCPoints[i].offsX))
-			{
-				deleteObst(j);
-				c_health--;	
-				return;
-			}
+			deleteObst(j);
+			c_health--;	
+			return true;
 		}
 	}
-
-//	mvprintw(1,1,shipCPoints[i].offsY);
+	return false;
 }
 
-void CGame::bulletXobstacles()
+void CGame::checkBullets()
 {
 	for ( int i = 0; i < c_cntBullets; i++)
 	{
 		YXPART bullet(ammo[i].giveCorePoint());
-
-		for( int j = 0; j < c_crntObst; j++)
-		{
-			if (obstacles[j]->collide(bullet.offsY,bullet.offsX))
-			{	
-				c_cntBullets--;
-				ammo.erase(ammo.begin()+i);
-				deleteObst(j);
-
-
-				c_score += 20;
-				return;
-			}
-		}
+		
+		if( hitBullet(bullet, i))
+			return;
 	}	
 }
 
+bool CGame::hitBullet(YXPART & bullet, const int & cnt)
+{
+	for( int j = 0; j < c_crntObst; j++)
+	{
+		if (obstacles[j]->collide(bullet.offsY,bullet.offsX))
+		{	
+			deleteBullet(cnt);
+			deleteObst(j);
+
+			c_score += 20;
+			return true;
+		}
+	}
+	return false;
+}
 
 
 void CGame::gameControll()
@@ -145,14 +154,23 @@ void CGame::gameControll()
 			c_cntBullets++;
 			break;
 		case 'l':
-		//PAUSE
+
+
+			nodelay(stdscr, false);
+			mvprintw(34,65,"PAUSED");
+			BattleShip.printO();
+			getch();
+
+			mvprintw(34,65,"      ");
+			BattleShip.clearO();
+			nodelay(stdscr, true);
 			break;
 	}
 
 }
 
 
-void CGame::drawSquare(const int & height,const int & width, const int & startY, const int & startX, const char & printChar)
+void CGame::drawSquare(const int & height,const int & width, const int & startY, const int & startX, const char & printChar)const
 {
 
 	attron(A_BOLD);
@@ -188,9 +206,9 @@ void CGame::startMenu()
 	mvprintw(20,10,"obstacles as u can and not being hit by them.");					
 	mvprintw(21,10,"Game has 10 levels in total.");
 	mvprintw(22,10,"Higher levels are going to be harder to survive.");
-	mvprintw(23,10,"Each destroyed obstacle highers your score.");
-	mvprintw(24,10,"There are randomly spawned bonuses that");
-	mvprintw(25,10,"will grant you some kind of a upgrade.");
+	mvprintw(23,10,"Each destroyed obstacle gives you +20 score.");
+	mvprintw(24,10,"Every 400 points of score will give you random bonus");
+	mvprintw(25,10,"(more guns, shield, extra health).");
 
 
 	attron(A_UNDERLINE);
@@ -202,8 +220,9 @@ void CGame::startMenu()
 	mvprintw(33,10,"Upper Arrow-Key - to move up");
 	mvprintw(35,10,"Lower Arrow-Key - to move down");
 	mvprintw(37,10,"F               - to shoot");
-	mvprintw(39,10,"P               - to pause the game");
+	mvprintw(39,10,"G               - to pause the game");
 	move(11,22);
+
 	while ( ! getFile())
 	{
 		mvprintw(11,22,"                        ");
@@ -217,7 +236,7 @@ void CGame::startMenu()
 }
 
 
-void CGame::drawMap()
+void CGame::drawMap()const
 {
 //----------------------------------VYKRESLENI MAPY
 
@@ -287,17 +306,12 @@ void CGame::spawnObstacles()
 					obstacles.push_back(new CObstacleB(file[i].y,file[i].x, '#',file[i].sp));			
 					break;
 				case 'C':
+					obstacles.push_back(new CObstacleC(file[i].y,file[i].x, '#',file[i].sp));			
 					break;
 			}
-//			CObstacle tmp5(file[i].y,file[i].x, file[i].sp);
-//			obstacles.push_back(tmp5);
+
 			c_crntObst++;
 			c_remainObst--;
-
-
-	//		CKnife b(;
-    //		things.push_back(new CKnife(b.vypisBlade()));
-	//	    c_pocetVeci++;
 		}
 	}
 
@@ -306,8 +320,8 @@ void CGame::spawnObstacles()
 bool CGame::getFile()
 {
 	int controll;
-	int a,b,c;
-	char d;
+	int x,time,speed;
+	char type;
 	FILE *mapFile;
 	getnstr(c_mapName,19);
 
@@ -317,14 +331,14 @@ bool CGame::getFile()
 
 	c_cntFileObjs = 0;
 
-	while ( (controll = fscanf(mapFile, "%d %d %d %c", &a, &b, &c, &d)) != EOF && ( d == 'A' || d == 'B' || d == 'C'))
+	while ( (controll = fscanf(mapFile, "%d %d %d %c", &x, &time, &speed, &type)) != EOF && ( type == 'A' || type == 'B' || type == 'C'))
 	{
 		if (controll < 3)
 		{
 			fclose(mapFile);
 			return false;
 		}
-		LOADLEVEL tmp(a,b,c,d);
+		LOADLEVEL tmp(x,time,speed,type);
 		file.push_back(tmp);
 		c_cntFileObjs++;
 
